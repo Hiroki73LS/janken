@@ -24,6 +24,7 @@ struct ContentView: View {
                        label: { EmptyView() }
                 )
                 Button(action: {
+                    print(janken.computerHand)
                     self.make = 100 - Int(kati)
                     print(kati)
                     print(make)
@@ -168,6 +169,7 @@ struct ContentView: View {
 
 func chooseComputerHand(kekka:Int, playerHand:Int) -> String {
 
+    @Binding var computerHand : Int
     @ObservedObject var janken = Janken()
     _ = 0
     
@@ -248,10 +250,6 @@ func chooseComputerHand(kekka:Int, playerHand:Int) -> String {
         result = "???"
     }
     return result
-    
-//    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-//        janken.computerHand = 3
-//    }
 }
 
 class Janken:ObservableObject{
@@ -263,6 +261,7 @@ class Janken:ObservableObject{
     
     @Published var mode:JankenMode = .stop
     @Published var computerHand = 0
+    
     var timer = Timer()
     
     func start(){
