@@ -65,7 +65,7 @@ struct ContentView: View {
                 }
 
             } //相手の手
-            .frame(height: 400)
+            .frame(width: 350, height: 400)
             Text(text)
                 .font(.title)
             if janken.mode == .stop {
@@ -242,14 +242,14 @@ func chooseComputerHand(kekka:Int, playerHand:Int) -> (result: String, computerH
     
     switch Temp {
     case (0, 0), (1, 1),(2, 2) :
-        result = "あいこ!!"
+        result = "ぽん！あいこ!!"
         print("playerHand7:\(playerHand),computerHand:\(computerHand)")
     case (0, 1),(1, 2),(2, 0) :
-        result = "あなたの勝ち!!"
+        result = "ぽん！勝ち!!"
         print("playerHand8:\(playerHand),computerHand:\(computerHand)")
         
     case (0, 2),(1, 0),(2, 1) :
-        result = "あなたの負け!!"
+        result = "ぽん！負け..."
         print("playerHand9:\(playerHand),computerHand:\(computerHand)")
     default :
         result = "???"
