@@ -120,7 +120,9 @@ struct ContentView: View {
                     Button(action: {
                         janken.stop()
                         self.playerHand = 0
-                        self.text = chooseComputerHand(kekka: self.kekka, playerHand: self.playerHand)
+                        let chooseTemp = chooseComputerHand(kekka: self.kekka, playerHand: self.playerHand)
+                        self.text = chooseTemp.result
+                        janken.computerHand = chooseTemp.computerHand
                     }) {
                         Image("gu")
                             .renderingMode(.original)
@@ -130,8 +132,9 @@ struct ContentView: View {
                     Button(action: {
                         janken.stop()
                         self.playerHand = 1
-                        self.text = chooseComputerHand(kekka: self.kekka, playerHand: self.playerHand)
-                        
+                        let chooseTemp = chooseComputerHand(kekka: self.kekka, playerHand: self.playerHand)
+                        self.text = chooseTemp.result
+                        janken.computerHand = chooseTemp.computerHand
                     }) {
                         Image("choki")
                             .renderingMode(.original)
@@ -141,7 +144,9 @@ struct ContentView: View {
                     Button(action: {
                         janken.stop()
                         self.playerHand = 2
-                        self.text = chooseComputerHand(kekka: self.kekka, playerHand: self.playerHand)
+                        let chooseTemp = chooseComputerHand(kekka: self.kekka, playerHand: self.playerHand)
+                        self.text = chooseTemp.result
+                        janken.computerHand = chooseTemp.computerHand
                     }) {
                         Image("pa")
                             .renderingMode(.original)
@@ -167,9 +172,9 @@ struct ContentView: View {
     }
 }
 
-func chooseComputerHand(kekka:Int, playerHand:Int) -> String {
+func chooseComputerHand(kekka:Int, playerHand:Int) -> (result: String, computerHand: Int) {
 
-    @Binding var computerHand : Int
+    var computerHand : Int = 0
     @ObservedObject var janken = Janken()
     _ = 0
     
@@ -177,25 +182,25 @@ func chooseComputerHand(kekka:Int, playerHand:Int) -> String {
         if playerHand == 0 {
             let random = Int.random(in: 0..<2)
             if random == 0 {
-                janken.computerHand = 0
+                computerHand = 0
             } else {
-                janken.computerHand = 2
+                computerHand = 2
             }
         }
         if playerHand == 1 {
             let random = Int.random(in: 0..<2)
             if random == 0 {
-                janken.computerHand = 1
+                computerHand = 1
             } else {
-                janken.computerHand = 0
+                computerHand = 0
             }
         }
         if playerHand == 2 {
             let random = Int.random(in: 0..<2)
             if random == 0 {
-                janken.computerHand = 2
+                computerHand = 2
             } else {
-                janken.computerHand = 1
+                computerHand = 1
             }
         }
     }
@@ -203,53 +208,53 @@ func chooseComputerHand(kekka:Int, playerHand:Int) -> String {
         if playerHand == 0 {
             let random = Int.random(in: 0..<2)
             if random == 0 {
-                janken.computerHand = 0
-                print("playerHand1:\(playerHand),computerHand:\(janken.computerHand)")
+                computerHand = 0
+                print("playerHand1:\(playerHand),computerHand:\(computerHand)")
             } else {
-                janken.computerHand = 1
-                print("playerHand2:\(playerHand),computerHand:\(janken.computerHand)")
+                computerHand = 1
+                print("playerHand2:\(playerHand),computerHand:\(computerHand)")
             }
         }
         if playerHand == 1 {
             let random = Int.random(in: 0..<2)
             if random == 0 {
-                janken.computerHand = 1
-                print("playerHand3:\(playerHand),computerHand:\(janken.computerHand)")
+                computerHand = 1
+                print("playerHand3:\(playerHand),computerHand:\(computerHand)")
             } else {
-                janken.computerHand = 2
-                print("playerHand4:\(playerHand),computerHand:\(janken.computerHand)")
+                computerHand = 2
+                print("playerHand4:\(playerHand),computerHand:\(computerHand)")
             }
         }
         if playerHand == 2 {
             let random = Int.random(in: 0..<2)
             if random == 0 {
-                janken.computerHand = 2
-                print("playerHand5:\(playerHand),computerHand:\(janken.computerHand)")
+                computerHand = 2
+                print("playerHand5:\(playerHand),computerHand:\(computerHand)")
             } else {
-                janken.computerHand = 0
-                print("playerHand6:\(playerHand),computerHand:\(janken.computerHand)")
+                computerHand = 0
+                print("playerHand6:\(playerHand),computerHand:\(computerHand)")
             }
         }
     }
     
     var result = ""
-    let Temp:(Int,Int) = (playerHand, janken.computerHand)
+    let Temp:(Int,Int) = (playerHand, computerHand)
     
     switch Temp {
     case (0, 0), (1, 1),(2, 2) :
         result = "あいこ!!"
-        print("playerHand7:\(playerHand),computerHand:\(janken.computerHand)")
+        print("playerHand7:\(playerHand),computerHand:\(computerHand)")
     case (0, 1),(1, 2),(2, 0) :
         result = "あなたの勝ち!!"
-        print("playerHand8:\(playerHand),computerHand:\(janken.computerHand)")
+        print("playerHand8:\(playerHand),computerHand:\(computerHand)")
         
     case (0, 2),(1, 0),(2, 1) :
         result = "あなたの負け!!"
-        print("playerHand9:\(playerHand),computerHand:\(janken.computerHand)")
+        print("playerHand9:\(playerHand),computerHand:\(computerHand)")
     default :
         result = "???"
     }
-    return result
+    return (result, computerHand)
 }
 
 class Janken:ObservableObject{
