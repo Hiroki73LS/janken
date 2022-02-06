@@ -43,12 +43,12 @@ struct ContentView: View {
             VStack{
                 /** 相手の手 */
                 if(janken.computerHand == 0) {
-                    Image("choki")
+                    Image("gu")
                         .resizable()
                         .scaledToFit()
                 }
                 if(janken.computerHand == 1) {
-                    Image("gu")
+                    Image("choki")
                         .resizable()
                         .scaledToFit()
                 }
@@ -57,6 +57,12 @@ struct ContentView: View {
                         .resizable()
                         .scaledToFit()
                 }
+                if(janken.computerHand == 3) {
+                    Image("appicon")
+                        .resizable()
+                        .scaledToFit()
+                }
+
             } //相手の手
             .frame(height: 400)
             Text(text)
@@ -65,7 +71,11 @@ struct ContentView: View {
                 HStack {
                     Button(action: {
                         kekka = syouhai.randomElement() ?? 0
-                        print("kekka:\(kekka)")
+                        if kekka == 0 {
+                            print("未来の結果は負け\(kekka)")
+                        } else {
+                            print("未来の結果は勝ち\(kekka)")
+                        }
                         janken.start()
                     }) {
                         Image("gu")
@@ -75,7 +85,11 @@ struct ContentView: View {
                     }
                     Button(action: {
                         kekka = syouhai.randomElement() ?? 0
-                        print("kekka:\(kekka)")
+                        if kekka == 0 {
+                            print("未来の結果は負け\(kekka)")
+                        } else {
+                            print("未来の結果は勝ち\(kekka)")
+                        }
                         janken.start()
                     }) {
                         Image("choki")
@@ -85,7 +99,11 @@ struct ContentView: View {
                     }
                     Button(action: {
                         kekka = syouhai.randomElement() ?? 0
-                        print("kekka:\(kekka)")
+                        if kekka == 0 {
+                            print("未来の結果は負け\(kekka)")
+                        } else {
+                            print("未来の結果は勝ち\(kekka)")
+                        }
                         janken.start()
                     }) {
                         Image("pa")
@@ -99,12 +117,9 @@ struct ContentView: View {
                 
                 HStack {
                     Button(action: {
-                        print("グー")
                         janken.stop()
                         self.playerHand = 0
-                        self.computerHand = chooseComputerHand();
-                        self.text = syouhainoMoji(playerHand:self.playerHand, computerHand:self.computerHand)
-                        
+                        self.text = chooseComputerHand(kekka: self.kekka, playerHand: self.playerHand)
                     }) {
                         Image("gu")
                             .renderingMode(.original)
@@ -112,11 +127,10 @@ struct ContentView: View {
                             .scaledToFit()
                     }
                     Button(action: {
-                        print("チョキ")
                         janken.stop()
                         self.playerHand = 1
-                        self.computerHand = chooseComputerHand();
-                        self.text = syouhainoMoji(playerHand:self.playerHand, computerHand:self.computerHand)
+                        self.text = chooseComputerHand(kekka: self.kekka, playerHand: self.playerHand)
+                        
                     }) {
                         Image("choki")
                             .renderingMode(.original)
@@ -124,11 +138,9 @@ struct ContentView: View {
                             .scaledToFit()
                     }
                     Button(action: {
-                        print("パー")
                         janken.stop()
                         self.playerHand = 2
-                        self.computerHand = chooseComputerHand();
-                        self.text = syouhainoMoji(playerHand:self.playerHand, computerHand:self.computerHand)
+                        self.text = chooseComputerHand(kekka: self.kekka, playerHand: self.playerHand)
                     }) {
                         Image("pa")
                             .renderingMode(.original)
@@ -150,33 +162,97 @@ struct ContentView: View {
                 syouhai.append(1)
             }
             print(syouhai)
-            print("配列の個数：\(syouhai.count)")
         } //起動時に勝敗の設定値を配列に格納
     }
 }
 
-func chooseComputerHand() -> Int {
-    let random = Int.random(in: 0..<3)
-    let computerHand = random
-    return computerHand
-}
+func chooseComputerHand(kekka:Int, playerHand:Int) -> String {
 
-func syouhainoMoji(playerHand:Int, computerHand:Int) -> String {
+    @ObservedObject var janken = Janken()
+    _ = 0
+    
+    if kekka == 0 {
+        if playerHand == 0 {
+            let random = Int.random(in: 0..<2)
+            if random == 0 {
+                janken.computerHand = 0
+            } else {
+                janken.computerHand = 2
+            }
+        }
+        if playerHand == 1 {
+            let random = Int.random(in: 0..<2)
+            if random == 0 {
+                janken.computerHand = 1
+            } else {
+                janken.computerHand = 0
+            }
+        }
+        if playerHand == 2 {
+            let random = Int.random(in: 0..<2)
+            if random == 0 {
+                janken.computerHand = 2
+            } else {
+                janken.computerHand = 1
+            }
+        }
+    }
+    if kekka == 1 {
+        if playerHand == 0 {
+            let random = Int.random(in: 0..<2)
+            if random == 0 {
+                janken.computerHand = 0
+                print("playerHand1:\(playerHand),computerHand:\(janken.computerHand)")
+            } else {
+                janken.computerHand = 1
+                print("playerHand2:\(playerHand),computerHand:\(janken.computerHand)")
+            }
+        }
+        if playerHand == 1 {
+            let random = Int.random(in: 0..<2)
+            if random == 0 {
+                janken.computerHand = 1
+                print("playerHand3:\(playerHand),computerHand:\(janken.computerHand)")
+            } else {
+                janken.computerHand = 2
+                print("playerHand4:\(playerHand),computerHand:\(janken.computerHand)")
+            }
+        }
+        if playerHand == 2 {
+            let random = Int.random(in: 0..<2)
+            if random == 0 {
+                janken.computerHand = 2
+                print("playerHand5:\(playerHand),computerHand:\(janken.computerHand)")
+            } else {
+                janken.computerHand = 0
+                print("playerHand6:\(playerHand),computerHand:\(janken.computerHand)")
+            }
+        }
+    }
+    
     var result = ""
-    let Temp:(Int,Int) = (playerHand, computerHand)
+    let Temp:(Int,Int) = (playerHand, janken.computerHand)
     
     switch Temp {
-    case (0, 0), (1, 2),(2, 2) :
+    case (0, 0), (1, 1),(2, 2) :
         result = "あいこ!!"
+        print("playerHand7:\(playerHand),computerHand:\(janken.computerHand)")
     case (0, 1),(1, 2),(2, 0) :
         result = "あなたの勝ち!!"
+        print("playerHand8:\(playerHand),computerHand:\(janken.computerHand)")
+        
     case (0, 2),(1, 0),(2, 1) :
         result = "あなたの負け!!"
+        print("playerHand9:\(playerHand),computerHand:\(janken.computerHand)")
     default :
         result = "???"
     }
     return result
-} // 勝敗の言葉を生成
+    
+//    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+//        janken.computerHand = 3
+//    }
+}
 
 class Janken:ObservableObject{
     
@@ -203,17 +279,19 @@ class Janken:ObservableObject{
             }
         }
         RunLoop.current.add(timer, forMode: .common)
+        
     }
     
     func stop(){
         timer.invalidate()
         mode = .stop
+        print("janken内のcomputerHand:\(computerHand)")
     }
     
 } // じゃんけんの高速スクロールを作成
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView(syouhai:[])
-    }
-}
+//struct ContentView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ContentView(syouhai:[])
+//    }
+//}
